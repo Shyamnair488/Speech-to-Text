@@ -1,0 +1,13 @@
+{
+    "name": "speech-to-text-app",
+    "version": "1.0.0",
+    "description": "Speech-to-Text Application for Vercel",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js"
+    },
+    "dependencies": {
+      "express": "^4.18.2"
+    }
+  }
+  

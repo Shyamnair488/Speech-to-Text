@@ -1,23 +1,13 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "api/*.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "public/*",
-        "use": "@vercel/static"
-      }
-    ],
     "routes": [
       {
-        "src": "/api/(.*)",
-        "dest": "/api/processSpeech.js"
+        "src": "/api/process_speech",
+        "dest": "api/processSpeech.js"
       },
       {
         "src": "/(.*)",
-        "dest": "/public/index.html"
+        "dest": "/public/$1"
       }
     ]
   }

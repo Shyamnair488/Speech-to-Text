@@ -1,22 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speech-to-Text</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        select {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .mic-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+        }
+
+        .mic-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .mic-icon:hover {
+            background-color: #d0d0d0;
+        }
+
+        .mic-icon.active {
+            background-color: #4285f4;
+            animation: ripple 1.5s infinite;
+        }
+
+        .mic-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: #fff;
+        }
+
+        @keyframes ripple {
+            0% {
+                box-shadow: 0 0 10px 5px rgba(66, 133, 244, 0.6);
+            }
+
+            50% {
+                box-shadow: 0 0 20px 10px rgba(66, 133, 244, 0.4);
+            }
+
+            100% {
+                box-shadow: 0 0 10px 5px rgba(66, 133, 244, 0.6);
+            }
+        }
+
+        #output {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: #444;
+            padding: 0.5rem 1rem;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
     <h1>Speech-to-Text</h1>
     <label for="language">Select Language Code:</label>
     <select id="language">
         <option value="en">English</option>
-        <!-- Add more options as needed -->
+        <option value="hi">Hindi</option>
+        <option value="bn">Bengali</option>
+        <option value="te">Telugu</option>
+        <option value="ml">Malayalam</option>
+        <option value="ta">Tamil</option>
+        <option value="mr">Marathi</option>
+        <option value="gu">Gujarati</option>
+        <option value="kn">Kannada</option>
+        <option value="pa">Punjabi</option>
+        <option value="or">Odia</option>
+        <option value="as">Assamese</option>
+        <option value="ur">Urdu</option>
+        <option value="ne">Nepali</option>
+        <option value="si">Sinhala</option>
+        <option value="th">Thai</option>
+        <option value="sa">Sanskrit</option>
+        <option value="kok">Konkani</option>
     </select>
     <div class="mic-container" onclick="startSpeechRecognition()">
-        <div id="micButton" class="mic-icon"></div>
+        <div id="micButton" class="mic-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0h-2a7 7 0 0 0 14 0h-2zm-7 6h4v3h-4z" />
+            </svg>
+        </div>
     </div>
     <p id="output">Click the mic to start speaking!</p>
-    <script src="/static/script.js"></script>
+    <script>
+        async function startSpeechRecognition() {
+            const micButton = document.getElementById("micButton");
+            const language = document.getElementById("language").value;
+
+            micButton.classList.add("active");
+            document.getElementById("output").innerText = "Processing...";
+
+            try {
+                const response = await fetch("/process_speech", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ language }),
+                });
+
+                const data = await response.json();
+                micButton.classList.remove("active");
+
+                if (response.ok) {
+                    document.getElementById("output").innerText = "Recognized Text: " + data.text;
+                } else {
+                    document.getElementById("output").innerText = "Error: " + data.error;
+                }
+            } catch (error) {
+                micButton.classList.remove("active");
+                document.getElementById("output").innerText = "Error: Unable to process speech.";
+            }
+        }
+    </script>
 </body>
+
 </html>

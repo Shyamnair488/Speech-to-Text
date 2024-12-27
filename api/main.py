@@ -13,13 +13,6 @@ INDIAN_LANGUAGES = [
     "en", "hi", "bn", "te", "ml", "ta", "mr", "gu", "kn", "pa", "or", "as", "ur", "ne", "si", "th", "sa", "kok"
 ]
 
-def calibrate_microphone():
-    """
-    Calibrate the microphone for ambient noise.
-    """
-    with sr.Microphone() as source:
-        recognizer.adjust_for_ambient_noise(source, duration=0.8)
-
 def speech_to_text(language="en"):
     """
     Capture speech input and convert it to text.
@@ -62,3 +55,6 @@ def process_speech():
         return jsonify({"text": text})
     else:
         return jsonify({"error": "No valid speech input detected"}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)

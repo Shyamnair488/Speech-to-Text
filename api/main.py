@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify, render_template
 import pyttsx3
 import speech_recognition as sr
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
@@ -62,6 +62,3 @@ def process_speech():
         return jsonify({"text": text})
     else:
         return jsonify({"error": "No valid speech input detected"}), 500
-
-if __name__ == "__main__":
-    app.run(debug=True)

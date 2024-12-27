@@ -1,0 +1,3 @@
+Flask
+pyttsx3
+speechrecognition

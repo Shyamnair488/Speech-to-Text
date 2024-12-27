@@ -19,5 +19,6 @@ export default function handler(req, res) {
         });
     }
 
+    // If the language is valid, simulate speech processing
     res.status(200).json({ text: `Processed speech in ${language}` });
 }

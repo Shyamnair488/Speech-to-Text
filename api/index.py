@@ -1,8 +1,8 @@
 import pyttsx3
 import speech_recognition as sr
-from flask import Blueprint, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 
-app_routes = Blueprint('app_routes', __name__)
+app = Flask(__name__, template_folder="../app/templates", static_folder="../app/static")
 
 # Initialize the recognizer and TTS engine
 recognizer = sr.Recognizer()
@@ -31,11 +31,11 @@ def speech_to_text(language="en"):
         except sr.WaitTimeoutError:
             return None
 
-@app_routes.route("/")
+@app.route("/")
 def index():
     return render_template("index.html")
 
-@app_routes.route("/process_speech", methods=["POST"])
+@app.route("/process_speech", methods=["POST"])
 def process_speech():
     language = request.json.get("language", "en")
     if language not in INDIAN_LANGUAGES:
@@ -46,3 +46,11 @@ def process_speech():
         return jsonify({"text": text})
     else:
         return jsonify({"error": "No valid speech input detected"}), 500
+
+@app.route("/static/<path:path>")
+def static_files(path):
+    return send_from_directory("../app/static", path)
+
+# Required for Vercel
+if __name__ == "__main__":
+    app.run(debug=True)
